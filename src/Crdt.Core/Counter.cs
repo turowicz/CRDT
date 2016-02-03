@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace Crdt.Core
 {
-    [Serializable]
     public class Counter : ICounter
     {
         readonly ConcurrentBag<UInt16> _payload = new ConcurrentBag<UInt16>();
