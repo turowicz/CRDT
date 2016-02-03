@@ -12,7 +12,10 @@ namespace Crdt.Core
 
         public void Add(T element)
         {
-            _payload.Add(element);
+            if (!this.Contains(element))
+            {
+                _payload.Add(element);
+            }
         }
 
         public ISet<T> Merge(ISet<T> set)

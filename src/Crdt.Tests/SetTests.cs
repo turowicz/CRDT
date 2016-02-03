@@ -38,7 +38,7 @@ namespace Crdt.Tests
         {
             _target = new Set<Int32>();
             Enumerable.Range(0, N / 2).ToList().ForEach(x => _target.Add(x));
-            Enumerable.Range(0, N).ToList().ForEach(x => Subject.Add(x));
+            Enumerable.Range(N, N).ToList().ForEach(x => Subject.Add(x));
         };
 
         Because of = () => _merged = Subject.Merge(_target);
@@ -55,7 +55,7 @@ namespace Crdt.Tests
         {
             _target = new Set<Int32>();
             Enumerable.Range(0, N).ToList().ForEach(x => _target.Add(x));
-            Enumerable.Range(0, N / 2).ToList().ForEach(x => Subject.Add(x));
+            Enumerable.Range(N, N / 2).ToList().ForEach(x => Subject.Add(x));
         };
 
         Because of = () => _merged = Subject.Merge(_target);
@@ -72,7 +72,7 @@ namespace Crdt.Tests
         {
             _target = new Set<Int32>();
             Enumerable.Range(0, N).ToList().ForEach(x => _target.Add(x));
-            Enumerable.Range(0, N).ToList().ForEach(x => Subject.Add(x));
+            Enumerable.Range(N, N).ToList().ForEach(x => Subject.Add(x));
         };
 
         Because of = () => _merged = Subject.Merge(_target);
