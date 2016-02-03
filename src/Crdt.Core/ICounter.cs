@@ -6,8 +6,8 @@ namespace Crdt.Core
     {
         void Increment();
 
-        long Value { get; }
+        Int64 Value { get; }
 
-        ICounter Merge(ICounter y);
+        ICounter Merge(ICounter counter);
     }
 }

@@ -14,21 +14,21 @@ namespace Crdt.Core
             _payload.Add(1);
         }
 
-        public long Value
+        public Int64 Value
         {
             get { return _payload.Sum(x => x); }
         }
 
-        public ICounter Merge(ICounter y)
+        public ICounter Merge(ICounter counter)
         {
-            if (y == null)
+            if (counter == null)
             {
-                throw new ArgumentNullException(nameof(y));
+                throw new ArgumentNullException(nameof(counter));
             }
 
             var result = new Counter();
 
-            for (var i = 0; i < Value + y.Value; i++)
+            for (var i = 0; i < Value + counter.Value; i++)
             {
                 result.Increment();
             }
@@ -36,16 +36,16 @@ namespace Crdt.Core
             return result;
         }
 
-        public int CompareTo(object obj)
+        public Int32 CompareTo(object obj)
         {
-            var y = obj as ICounter;
+            var counter = obj as ICounter;
 
-            if (y == null)
+            if (counter == null)
             {
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            return Value.CompareTo(y.Value);
+            return Value.CompareTo(counter.Value);
         }
     }
 }

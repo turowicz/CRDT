@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Crdt.Core;
 using Machine.Fakes;
 using Machine.Specifications;
@@ -11,7 +12,7 @@ namespace Crdt.Tests
     [Subject(typeof(Counter))]
     public abstract class BaseCounterTest : WithSubject<Counter>
     {
-        protected const int N = 100;
+        protected const Int32 N = 100;
     }
 
     public class When_incrementing_once : BaseCounterTest
@@ -21,7 +22,7 @@ namespace Crdt.Tests
         It should_return_1 = () => Subject.Value.ShouldEqual(1);
     }
 
-    public class When_incrementing_n_times : BaseCounterTest
+    public class When_incrementing_N_times : BaseCounterTest
     {
         Because of = () => Enumerable.Range(0, N).ToList().ForEach(x => Subject.Increment());
 
@@ -82,7 +83,7 @@ namespace Crdt.Tests
     public class When_comparing_smaller_to_bigger_counters : BaseCounterTest
     {
         static ICounter _target;
-        static int _comparison;
+        static Int32 _comparison;
 
         Establish that = () =>
         {
@@ -99,7 +100,7 @@ namespace Crdt.Tests
     public class When_comparing_bigger_to_smaller_counters : BaseCounterTest
     {
         static ICounter _target;
-        static int _comparison;
+        static Int32 _comparison;
 
         Establish that = () =>
         {
@@ -116,7 +117,7 @@ namespace Crdt.Tests
     public class When_comparing_equal_to_equal_counters : BaseCounterTest
     {
         static ICounter _target;
-        static int _comparison;
+        static Int32 _comparison;
 
         Establish that = () =>
         {
