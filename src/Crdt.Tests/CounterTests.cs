@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Crdt.Core;
-using Machine.Fakes;
 using Machine.Specifications;
+
 // ReSharper disable UnusedMember.Local
 // ReSharper disable InconsistentNaming
 // ReSharper disable ArrangeTypeMemberModifiers
@@ -10,9 +10,21 @@ using Machine.Specifications;
 namespace Crdt.Tests
 {
     [Subject(typeof(Counter))]
-    public abstract class BaseCounterTest : WithSubject<Counter>
+    public abstract class BaseCounterTest
     {
+        Establish that = () =>
+        {
+            Subject = new Counter(0, 2);
+            Other = new Counter(1, 2);
+        };
+
+        protected static Counter Other { get; set; }
+
+        protected static Counter Subject { get; set; }
+
         protected const Int32 N = 100;
+
+        protected const Int32 Nodes = 2;
     }
 
     public class When_incrementing_once : BaseCounterTest
@@ -26,108 +38,52 @@ namespace Crdt.Tests
     {
         Because of = () => Enumerable.Range(0, N).ToList().ForEach(x => Subject.Increment());
 
-        It should_return_n = () => Subject.Value.ShouldEqual(N);
+        It should_return_N = () => Subject.Value.ShouldEqual(N);
     }
 
-    public class When_merging_smaller_to_bigger_counters : BaseCounterTest
+    public class When_merging_two_counters : BaseCounterTest
     {
-        static ICounter _target;
-        static ICounter _merged;
-
         Establish that = () =>
         {
-            _target = new Counter();
-            Enumerable.Range(0, N / 2).ToList().ForEach(x => _target.Increment());
             Enumerable.Range(0, N).ToList().ForEach(x => Subject.Increment());
+            Enumerable.Range(0, N / 2).ToList().ForEach(x => Other.Increment());
         };
 
-        Because of = () => _merged = Subject.Merge(_target);
+        Because of = () => Subject.Merge(Other);
 
-        It should_return_sum_of_both_as_value = () => _merged.Value.ShouldEqual(N + N / 2);
+        It should_return_sum_of_both = () => Subject.Value.ShouldEqual(N + N / 2);
     }
 
-    public class When_merging_bigger_to_smaller_counters : BaseCounterTest
+    public class When_comparing_two_merged_counters : BaseCounterTest
     {
-        static ICounter _target;
-        static ICounter _merged;
+        static Int32 comparison;
 
         Establish that = () =>
         {
-            _target = new Counter();
-            Enumerable.Range(0, N).ToList().ForEach(x => _target.Increment());
-            Enumerable.Range(0, N / 2).ToList().ForEach(x => Subject.Increment());
-        };
-
-        Because of = () => _merged = Subject.Merge(_target);
-
-        It should_return_sum_of_both_as_value = () => _merged.Value.ShouldEqual(N + N / 2);
-    }
-
-    public class When_merging_equal_to_equal_counters : BaseCounterTest
-    {
-        static ICounter _target;
-        static ICounter _merged;
-
-        Establish that = () =>
-        {
-            _target = new Counter();
-            Enumerable.Range(0, N).ToList().ForEach(x => _target.Increment());
             Enumerable.Range(0, N).ToList().ForEach(x => Subject.Increment());
+            Enumerable.Range(0, N).ToList().ForEach(x => Other.Increment());
+
+            Subject.Merge(Other);
+            Other.Merge(Subject);
         };
 
-        Because of = () => _merged = Subject.Merge(_target);
+        Because of = () => comparison = Subject.CompareTo(Other);
 
-        It should_return_sum_of_both_as_value = () => _merged.Value.ShouldEqual(N * 2);
+        It should_return_0 = () => comparison.ShouldEqual(0);
     }
 
-    public class When_comparing_smaller_to_bigger_counters : BaseCounterTest
+    public class When_comparing_two_umerged_counters : BaseCounterTest
     {
-        static ICounter _target;
-        static Int32 _comparison;
+        static Int32 comparison;
 
         Establish that = () =>
         {
-            _target = new Counter();
-            Enumerable.Range(0, N).ToList().ForEach(x => _target.Increment());
-            Enumerable.Range(0, N / 2).ToList().ForEach(x => Subject.Increment());
-        };
-
-        Because of = () => _comparison = Subject.CompareTo(_target);
-
-        It should_return_negative_1 = () => _comparison.ShouldEqual(-1);
-    }
-
-    public class When_comparing_bigger_to_smaller_counters : BaseCounterTest
-    {
-        static ICounter _target;
-        static Int32 _comparison;
-
-        Establish that = () =>
-        {
-            _target = new Counter();
-            Enumerable.Range(0, N / 2).ToList().ForEach(x => _target.Increment());
             Enumerable.Range(0, N).ToList().ForEach(x => Subject.Increment());
+            Enumerable.Range(0, N).ToList().ForEach(x => Other.Increment());
         };
 
-        Because of = () => _comparison = Subject.CompareTo(_target);
+        Because of = () => comparison = Subject.CompareTo(Other);
 
-        It should_return_1 = () => _comparison.ShouldEqual(1);
-    }
-
-    public class When_comparing_equal_to_equal_counters : BaseCounterTest
-    {
-        static ICounter _target;
-        static Int32 _comparison;
-
-        Establish that = () =>
-        {
-            _target = new Counter();
-            Enumerable.Range(0, N).ToList().ForEach(x => _target.Increment());
-            Enumerable.Range(0, N).ToList().ForEach(x => Subject.Increment());
-        };
-
-        Because of = () => _comparison = Subject.CompareTo(_target);
-
-        It should_return_0 = () => _comparison.ShouldEqual(0);
+        It should_return_negative_1 = () => comparison.ShouldEqual(-1);
     }
 }

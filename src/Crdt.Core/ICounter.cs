@@ -8,6 +8,8 @@ namespace Crdt.Core
 
         Int64 Value { get; }
 
-        ICounter Merge(ICounter counter);
+        void Merge(ICounter counter);
+
+        Int64 this[Int32 i] { get; set; }
     }
 }

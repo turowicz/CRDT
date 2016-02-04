@@ -1,16 +1,24 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq;
 
 namespace Crdt.Core
 {
     public class Counter : ICounter
     {
-        readonly ConcurrentBag<UInt16> _payload = new ConcurrentBag<UInt16>();
+        readonly Int32 _id;
+        readonly Int32 _nodes;
+        readonly Int64[] _payload;
+
+        public Counter(Int32 id, Int32 nodes)
+        {
+            _id = id;
+            _nodes = nodes;
+            _payload = new Int64[nodes];
+        }
 
         public void Increment()
         {
-            _payload.Add(1);
+            _payload[_id] += 1;
         }
 
         public Int64 Value
@@ -18,21 +26,17 @@ namespace Crdt.Core
             get { return _payload.Sum(x => x); }
         }
 
-        public ICounter Merge(ICounter counter)
+        public void Merge(ICounter counter)
         {
             if (counter == null)
             {
                 throw new ArgumentNullException(nameof(counter));
             }
 
-            var result = new Counter();
-
-            for (var i = 0; i < Value + counter.Value; i++)
+            for (var i = 0; i < _nodes; i++)
             {
-                result.Increment();
+                _payload[i] = Math.Max(_payload[i], counter[i]);
             }
-
-            return result;
         }
 
         public Int32 CompareTo(object obj)
@@ -44,7 +48,24 @@ namespace Crdt.Core
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            return Value.CompareTo(counter.Value);
+            for (var i = 0; i < _nodes; i++)
+            {
+                if (_payload[i] > counter[i])
+                {
+                    return -1;
+                }
+            }
+
+            return 0;
+        }
+
+        public Int64 this[Int32 i]
+        {
+            get
+            {
+                return _payload[i];
+            }
+            set { throw new InvalidOperationException("Cannot set externally."); }
         }
     }
 }
