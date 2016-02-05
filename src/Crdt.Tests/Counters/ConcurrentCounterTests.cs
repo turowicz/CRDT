@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
-using Crdt.Core;
 using Crdt.Core.Counters;
 using Machine.Specifications;
+
 // ReSharper disable UnusedMember.Local
 // ReSharper disable InconsistentNaming
 // ReSharper disable ArrangeTypeMemberModifiers
 
-namespace Crdt.Tests
+namespace Crdt.Tests.Counters
 {
     public class ConcurrentCounterTests
     {

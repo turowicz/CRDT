@@ -1,39 +1,39 @@
 ﻿using System;
 using System.Linq;
 using Crdt.Abstract.Interfaces;
-using Crdt.Core;
 using Crdt.Core.Sets;
 using Machine.Fakes;
 using Machine.Specifications;
+
 // ReSharper disable UnusedMember.Local
 // ReSharper disable InconsistentNaming
 // ReSharper disable ArrangeTypeMemberModifiers
 
-namespace Crdt.Tests
+namespace Crdt.Tests.Sets
 {
-    public class SetTests
+    public class ConcurrentSetTests
     {
-        [Subject(typeof(Set<Int32>))]
-        public abstract class BaseSetTest : WithSubject<Set<Int32>>
+        [Subject(typeof(ConcurrentSet<Int32>))]
+        public abstract class BaseConcurrentSetTest : WithSubject<ConcurrentSet<Int32>>
         {
             protected const Int32 N = 100;
         }
 
-        public class When_adding_an_item : BaseSetTest
+        public class When_adding_an_item : BaseConcurrentSetTest
         {
             Because of = () => Subject.Add(N);
 
             It should_contain_only_n = () => Subject.Single().ShouldEqual(N);
         }
 
-        public class When_adding_N_items : BaseSetTest
+        public class When_adding_N_items : BaseConcurrentSetTest
         {
             Because of = () => Enumerable.Range(0, N).ToList().ForEach(x => Subject.Add(x));
 
             It should_contain_N_elements = () => Subject.LongCount().ShouldEqual(N);
         }
 
-        public class When_merging_smaller_to_bigger_sets : BaseSetTest
+        public class When_merging_smaller_to_bigger_sets : BaseConcurrentSetTest
         {
             static ISet<Int32> _target;
             static ISet<Int32> _merged;
@@ -50,7 +50,7 @@ namespace Crdt.Tests
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N + N / 2);
         }
 
-        public class When_merging_bigger_to_smaller_sets : BaseSetTest
+        public class When_merging_bigger_to_smaller_sets : BaseConcurrentSetTest
         {
             static ISet<Int32> _target;
             static ISet<Int32> _merged;
@@ -67,7 +67,7 @@ namespace Crdt.Tests
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N + N / 2);
         }
 
-        public class When_merging_equal_to_equal_sets : BaseSetTest
+        public class When_merging_equal_to_equal_sets : BaseConcurrentSetTest
         {
             static ISet<Int32> _target;
             static ISet<Int32> _merged;
@@ -84,7 +84,7 @@ namespace Crdt.Tests
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N * 2);
         }
 
-        public class When_comparing_smaller_to_bigger_sets : BaseSetTest
+        public class When_comparing_smaller_to_bigger_sets : BaseConcurrentSetTest
         {
             static ISet<Int32> _target;
             static Int32 _comparison;
@@ -101,7 +101,7 @@ namespace Crdt.Tests
             It should_not_return_0 = () => _comparison.ShouldNotEqual(0);
         }
 
-        public class When_comparing_bigger_to_smaller_sets : BaseSetTest
+        public class When_comparing_bigger_to_smaller_sets : BaseConcurrentSetTest
         {
             static ISet<Int32> _target;
             static Int32 _comparison;
@@ -118,7 +118,7 @@ namespace Crdt.Tests
             It should_return_0 = () => _comparison.ShouldEqual(0);
         }
 
-        public class When_comparing_equal_to_equal_sets : BaseSetTest
+        public class When_comparing_equal_to_equal_sets : BaseConcurrentSetTest
         {
             static ISet<Int32> _target;
             static Int32 _comparison;

@@ -58,10 +58,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConcurrentSetTests.cs" />
-    <Compile Include="ConcurrentCounterTests.cs" />
-    <Compile Include="SetTests.cs" />
-    <Compile Include="CounterTests.cs" />
+    <Compile Include="Sets\ConcurrentSetTests.cs" />
+    <Compile Include="Counters\ConcurrentCounterTests.cs" />
+    <Compile Include="Sets\SetTests.cs" />
+    <Compile Include="Counters\CounterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
