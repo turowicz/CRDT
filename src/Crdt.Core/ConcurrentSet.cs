@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Crdt.Core
 {
-    public class Set<T> : ISet<T>
+    public class ConcurrentSet<T> : ISet<T>
     {
-        readonly HashSet<T> _payload = new HashSet<T>();
+        readonly ConcurrentBag<T> _payload = new ConcurrentBag<T>();
 
         public void Add(T element)
         {
-            _payload.Add(element);
+            if (!this.Contains(element))
+            {
+                _payload.Add(element);
+            }
         }
 
         public ISet<T> Merge(ISet<T> set)

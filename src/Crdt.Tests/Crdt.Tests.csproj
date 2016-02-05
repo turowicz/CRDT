@@ -58,6 +58,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConcurrentSetTests.cs" />
     <Compile Include="SetTests.cs" />
     <Compile Include="CounterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
