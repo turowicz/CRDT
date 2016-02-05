@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Crdt.Core
+namespace Crdt.Abstract.Interfaces
 {
     public interface ICounter : IComparable
     {

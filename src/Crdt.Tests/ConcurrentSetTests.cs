@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Crdt.Abstract.Interfaces;
 using Crdt.Core;
+using Crdt.Core.Sets;
 using Machine.Fakes;
 using Machine.Specifications;
 // ReSharper disable UnusedMember.Local

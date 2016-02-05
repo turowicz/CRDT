@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Crdt.Core
+namespace Crdt.Abstract.Interfaces
 {
     public interface ISet<T> : IComparable, IEnumerable<T>
     {

@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Crdt.Core
+namespace Crdt.Core.Sets
 {
-    public class Set<T> : ISet<T>
+    public class Set<T> : Abstract.Interfaces.ISet<T>
     {
         readonly HashSet<T> _payload = new HashSet<T>();
 
@@ -14,7 +14,7 @@ namespace Crdt.Core
             _payload.Add(element);
         }
 
-        public ISet<T> Merge(ISet<T> set)
+        public Abstract.Interfaces.ISet<T> Merge(Abstract.Interfaces.ISet<T> set)
         {
             if (set == null)
             {
@@ -38,7 +38,7 @@ namespace Crdt.Core
 
         public Int32 CompareTo(object obj)
         {
-            var set = obj as ISet<T>;
+            var set = obj as Abstract.Interfaces.ISet<T>;
 
             if (set == null)
             {

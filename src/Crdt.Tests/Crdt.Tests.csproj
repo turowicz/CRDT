@@ -69,6 +69,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Crdt.Abstract\Crdt.Abstract.csproj">
+      <Project>{4817e630-aafd-4a52-90a7-c97e1f8fba96}</Project>
+      <Name>Crdt.Abstract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Crdt.Core\Crdt.Core.csproj">
       <Project>{63838731-332c-47e8-8a3d-cb020020213e}</Project>
       <Name>Crdt.Core</Name>
