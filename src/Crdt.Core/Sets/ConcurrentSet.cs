@@ -22,19 +22,12 @@ namespace Crdt.Core.Sets
                 throw new ArgumentNullException(nameof(set));
             }
 
-            var result = new Set<T>();
-
-            foreach (var element in this)
-            {
-                result.Add(element);
-            }
-
             foreach (var element in set)
             {
-                result.Add(element);
+                Add(element);
             }
 
-            return result;
+            return this;
         }
 
         public Int32 CompareTo(object obj)

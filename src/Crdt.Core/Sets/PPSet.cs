@@ -30,9 +30,14 @@ namespace Crdt.Core.Sets
 
         public IPPSet<T> Merge(IPPSet<T> set)
         {
-            foreach (var element in set)
+            foreach (var element in set.AddSet)
             {
                 Add(element);
+            }
+
+            foreach (var element in set.RemoveSet)
+            {
+                Remove(element);
             }
 
             return this;
@@ -47,7 +52,12 @@ namespace Crdt.Core.Sets
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            if (this.Any(element => !set.Contains(element)))
+            if (AddSet.Any(element => !set.AddSet.Contains(element)))
+            {
+                return -1;
+            }
+
+            if (RemoveSet.Any(element => !set.RemoveSet.Contains(element)))
             {
                 return -1;
             }
