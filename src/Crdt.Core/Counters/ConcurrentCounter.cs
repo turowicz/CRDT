@@ -18,13 +18,13 @@ namespace Crdt.Core.Counters
 
             for (int i = 0; i < _nodes; i++)
             {
-                _payload.AddOrUpdate(i, x => 0, (x, y) => 0);
+                _payload.AddOrUpdate(i, key => 0, (key, value) => 0);
             }
         }
 
         public void Increment()
         {
-            _payload.AddOrUpdate(_id, x => 1, (x, y) => ++y);
+            _payload.AddOrUpdate(_id, key => 1, (key, value) => ++value);
         }
 
         public Int64 Value
@@ -51,7 +51,7 @@ namespace Crdt.Core.Counters
 
             for (var i = 0; i < _nodes; i++)
             {
-                _payload.AddOrUpdate(i, x => 0, (x, y) => Math.Max(y, counter[i]));
+                _payload.AddOrUpdate(i, key => counter[i], (key, value) => Math.Max(value, counter[i]));
             }
         }
 

@@ -8,14 +8,11 @@ namespace Crdt.Core.Sets
 {
     public class ConcurrentSet<T> : Abstract.Interfaces.ISet<T>
     {
-        readonly ConcurrentBag<T> _payload = new ConcurrentBag<T>();
+        readonly ConcurrentDictionary<T, T> _payload = new ConcurrentDictionary<T, T>();
 
         public void Add(T element)
         {
-            if (!this.Contains(element))
-            {
-                _payload.Add(element);
-            }
+            _payload.AddOrUpdate(element, key => element, (key, value) => value);
         }
 
         public Abstract.Interfaces.ISet<T> Merge(Abstract.Interfaces.ISet<T> set)
@@ -59,7 +56,7 @@ namespace Crdt.Core.Sets
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _payload.GetEnumerator();
+            return _payload.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
