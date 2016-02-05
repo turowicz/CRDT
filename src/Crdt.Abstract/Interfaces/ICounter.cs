@@ -8,7 +8,7 @@ namespace Crdt.Abstract.Interfaces
 
         Int64 Value { get; }
 
-        void Merge(ICounter counter);
+        ICounter Merge(ICounter counter);
 
         Int64 this[Int32 i] { get; set; }
     }

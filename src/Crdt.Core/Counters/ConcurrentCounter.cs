@@ -42,7 +42,7 @@ namespace Crdt.Core.Counters
             }
         }
 
-        public void Merge(ICounter counter)
+        public ICounter Merge(ICounter counter)
         {
             if (counter == null)
             {
@@ -53,6 +53,8 @@ namespace Crdt.Core.Counters
             {
                 _payload.AddOrUpdate(i, key => counter[i], (key, value) => Math.Max(value, counter[i]));
             }
+
+            return this;
         }
 
         public Int32 CompareTo(object obj)
