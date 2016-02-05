@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Sets\ConcurrentSetTests.cs" />
     <Compile Include="Counters\ConcurrentCounterTests.cs" />
+    <Compile Include="Sets\PPSetTests.cs" />
     <Compile Include="Sets\SetTests.cs" />
     <Compile Include="Counters\CounterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

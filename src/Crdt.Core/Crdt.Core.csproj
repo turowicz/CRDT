@@ -38,6 +38,7 @@
     <Compile Include="Counters\Counter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sets\ConcurrentSet.cs" />
+    <Compile Include="Sets\PPSet.cs" />
     <Compile Include="Sets\Set.cs" />
   </ItemGroup>
   <ItemGroup>
