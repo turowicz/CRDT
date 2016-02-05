@@ -1,29 +1,44 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Concurrent;
 
 namespace Crdt.Core
 {
-    public class Counter : ICounter
+    public class ConcurrentCounter : ICounter
     {
         readonly Int32 _id;
         readonly Int32 _nodes;
-        readonly Int64[] _payload;
+        readonly ConcurrentDictionary<Int32, Int64> _payload;
 
-        public Counter(Int32 id, Int32 nodes)
+        public ConcurrentCounter(Int32 id, Int32 nodes)
         {
             _id = id;
             _nodes = nodes;
-            _payload = new Int64[nodes];
+            _payload = new ConcurrentDictionary<Int32, Int64>();
+
+            for (int i = 0; i < _nodes; i++)
+            {
+                _payload.AddOrUpdate(i, x => 0, (x, y) => 0);
+            }
         }
 
         public void Increment()
         {
-            _payload[_id] += 1;
+            _payload.AddOrUpdate(_id, x => 1, (x, y) => ++y);
         }
 
         public Int64 Value
         {
-            get { return _payload.Sum(x => x); }
+            get
+            {
+                var result = 0l;
+
+                for (int i = 0; i < _nodes; i++)
+                {
+                    result += this[i];
+                }
+
+                return result;
+            }
         }
 
         public void Merge(ICounter counter)
@@ -35,7 +50,7 @@ namespace Crdt.Core
 
             for (var i = 0; i < _nodes; i++)
             {
-                _payload[i] = Math.Max(_payload[i], counter[i]);
+                _payload.AddOrUpdate(i, x => 0, (x, y) => Math.Max(y, counter[i]));
             }
         }
 
@@ -50,7 +65,7 @@ namespace Crdt.Core
 
             for (var i = 0; i < _nodes; i++)
             {
-                if (_payload[i] > counter[i])
+                if (this[i] > counter[i])
                 {
                     return -1;
                 }
@@ -63,7 +78,14 @@ namespace Crdt.Core
         {
             get
             {
-                return _payload[i];
+                Int64 result;
+
+                if (_payload.TryGetValue(i, out result))
+                {
+                    return result;
+                }
+
+                throw new InvalidOperationException("Getting value failed.");
             }
             set
             {

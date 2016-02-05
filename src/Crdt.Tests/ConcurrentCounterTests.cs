@@ -8,41 +8,41 @@ using Machine.Specifications;
 
 namespace Crdt.Tests
 {
-    public class CounterTests
+    public class ConcurrentCounterTests
     {
-        [Subject(typeof(Counter))]
-        public abstract class BaseCounterTest
+        [Subject(typeof(ConcurrentCounter))]
+        public abstract class BaseConcurrentCounterTest
         {
             Establish that = () =>
             {
-                Subject = new Counter(0, 2);
-                Other = new Counter(1, 2);
+                Subject = new ConcurrentCounter(0, 2);
+                Other = new ConcurrentCounter(1, 2);
             };
 
-            protected static Counter Other { get; set; }
+            protected static ConcurrentCounter Other { get; set; }
 
-            protected static Counter Subject { get; set; }
+            protected static ConcurrentCounter Subject { get; set; }
 
             protected const Int32 N = 100;
 
             protected const Int32 Nodes = 2;
         }
 
-        public class When_incrementing_once : BaseCounterTest
+        public class When_incrementing_once : BaseConcurrentCounterTest
         {
             Because of = () => Subject.Increment();
 
             It should_return_1 = () => Subject.Value.ShouldEqual(1);
         }
 
-        public class When_incrementing_N_times : BaseCounterTest
+        public class When_incrementing_N_times : BaseConcurrentCounterTest
         {
             Because of = () => Enumerable.Range(0, N).ToList().ForEach(x => Subject.Increment());
 
             It should_return_N = () => Subject.Value.ShouldEqual(N);
         }
 
-        public class When_merging_two_counters : BaseCounterTest
+        public class When_merging_two_counters : BaseConcurrentCounterTest
         {
             Establish that = () =>
             {
@@ -55,7 +55,7 @@ namespace Crdt.Tests
             It should_return_sum_of_both = () => Subject.Value.ShouldEqual(N + N / 2);
         }
 
-        public class When_comparing_two_merged_counters : BaseCounterTest
+        public class When_comparing_two_merged_counters : BaseConcurrentCounterTest
         {
             static Int32 comparison;
 
@@ -73,7 +73,7 @@ namespace Crdt.Tests
             It should_return_0 = () => comparison.ShouldEqual(0);
         }
 
-        public class When_comparing_two_umerged_counters : BaseCounterTest
+        public class When_comparing_two_umerged_counters : BaseConcurrentCounterTest
         {
             static Int32 comparison;
 
