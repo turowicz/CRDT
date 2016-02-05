@@ -48,6 +48,10 @@ namespace Crdt.Tests.Sets
             Because of = () => _merged = Subject.Merge(_target);
 
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N + N / 2);
+
+            It should_contain_target = () => _merged.ShouldContain(_target);
+
+            It should_contain_source = () => _merged.ShouldContain(Subject);
         }
 
         public class When_merging_bigger_to_smaller_sets : BaseSetTest
@@ -65,6 +69,10 @@ namespace Crdt.Tests.Sets
             Because of = () => _merged = Subject.Merge(_target);
 
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N + N / 2);
+
+            It should_contain_target = () => _merged.ShouldContain(_target);
+
+            It should_contain_source = () => _merged.ShouldContain(Subject);
         }
 
         public class When_merging_equal_to_equal_sets : BaseSetTest
@@ -82,6 +90,10 @@ namespace Crdt.Tests.Sets
             Because of = () => _merged = Subject.Merge(_target);
 
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N * 2);
+
+            It should_contain_target = () => _merged.ShouldContain(_target);
+
+            It should_contain_source = () => _merged.ShouldContain(Subject);
         }
 
         public class When_comparing_smaller_to_bigger_sets : BaseSetTest

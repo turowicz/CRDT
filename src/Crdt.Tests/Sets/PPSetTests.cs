@@ -70,6 +70,10 @@ namespace Crdt.Tests.Sets
             Because of = () => _merged = Subject.Merge(_target);
 
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N + N / 2);
+
+            It should_contain_target = () => _merged.ShouldContain(_target);
+
+            It should_contain_source = () => _merged.ShouldContain(Subject);
         }
 
         public class When_merging_bigger_to_smaller_sets : BasePPSetTest
@@ -87,6 +91,10 @@ namespace Crdt.Tests.Sets
             Because of = () => _merged = Subject.Merge(_target);
 
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N + N / 2);
+
+            It should_contain_target = () => _merged.ShouldContain(_target);
+
+            It should_contain_source = () => _merged.ShouldContain(Subject);
         }
 
         public class When_merging_equal_to_equal_sets : BasePPSetTest
@@ -104,6 +112,10 @@ namespace Crdt.Tests.Sets
             Because of = () => _merged = Subject.Merge(_target);
 
             It should_return_sum_of_both_as_value = () => _merged.LongCount().ShouldEqual(N * 2);
+
+            It should_contain_target = () => _merged.ShouldContain(_target);
+
+            It should_contain_source = () => _merged.ShouldContain(Subject);
         }
 
         public class When_comparing_smaller_to_bigger_sets : BasePPSetTest
@@ -116,6 +128,23 @@ namespace Crdt.Tests.Sets
                 _target = new PPSet<int>(new Set<int>(), new Set<int>());
                 Enumerable.Range(0, N / 2).ToList().ForEach(x => _target.Add(x));
                 Enumerable.Range(0, N).ToList().ForEach(x => Subject.Add(x));
+            };
+
+            Because of = () => _comparison = Subject.CompareTo(_target);
+
+            It should_not_return_0 = () => _comparison.ShouldNotEqual(0);
+        }
+
+        public class When_comparing_smaller_to_bigger_sets_with_remove : BasePPSetTest
+        {
+            static IPPSet<Int32> _target;
+            static Int32 _comparison;
+
+            Establish that = () =>
+            {
+                _target = new PPSet<int>(new Set<int>(), new Set<int>());
+                Enumerable.Range(0, N / 2).ToList().ForEach(x => _target.Remove(x));
+                Enumerable.Range(0, N).ToList().ForEach(x => Subject.Remove(x));
             };
 
             Because of = () => _comparison = Subject.CompareTo(_target);
@@ -140,6 +169,23 @@ namespace Crdt.Tests.Sets
             It should_return_0 = () => _comparison.ShouldEqual(0);
         }
 
+        public class When_comparing_bigger_to_smaller_sets_with_remove : BasePPSetTest
+        {
+            static IPPSet<Int32> _target;
+            static Int32 _comparison;
+
+            Establish that = () =>
+            {
+                _target = new PPSet<int>(new Set<int>(), new Set<int>());
+                Enumerable.Range(0, N).ToList().ForEach(x => _target.Remove(x));
+                Enumerable.Range(0, N / 2).ToList().ForEach(x => Subject.Remove(x));
+            };
+
+            Because of = () => _comparison = Subject.CompareTo(_target);
+
+            It should_return_0 = () => _comparison.ShouldEqual(0);
+        }
+
         public class When_comparing_equal_to_equal_sets : BasePPSetTest
         {
             static IPPSet<Int32> _target;
@@ -149,7 +195,9 @@ namespace Crdt.Tests.Sets
             {
                 _target = new PPSet<int>(new Set<int>(), new Set<int>());
                 Enumerable.Range(0, N).ToList().ForEach(x => _target.Add(x));
+                Enumerable.Range(0, N / 2).ToList().ForEach(x => _target.Remove(x));
                 Enumerable.Range(0, N).ToList().ForEach(x => Subject.Add(x));
+                Enumerable.Range(0, N / 2).ToList().ForEach(x => Subject.Remove(x));
             };
 
             Because of = () => _comparison = Subject.CompareTo(_target);
