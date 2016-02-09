@@ -2,7 +2,6 @@
 using System.Linq;
 using Crdt.Abstract.Interfaces;
 using Crdt.Core.Sets;
-using Machine.Fakes;
 using Machine.Specifications;
 
 // ReSharper disable UnusedMember.Local
@@ -27,7 +26,7 @@ namespace Crdt.Tests.Sets
         {
             Because of = () => Subject.Add(N);
 
-            It should_contain_only_n = () => Subject.Single().ShouldEqual(N);
+            It should_contain_only_N = () => Subject.Single().ShouldEqual(N);
         }
 
         public class When_removing_an_item : BasePPSetTest
@@ -51,6 +50,19 @@ namespace Crdt.Tests.Sets
             Establish that = () => Enumerable.Range(0, N).ToList().ForEach(x => Subject.Add(x));
 
             Because of = () => Subject.ToList().ForEach(x => Subject.Remove(x));
+
+            It should_be_empty = () => Subject.ShouldBeEmpty();
+        }
+
+        public class When_readding_an_item : BasePPSetTest
+        {
+            Establish that = () =>
+            {
+                Subject.Add(N);
+                Subject.Remove(N);
+            };
+
+            Because of = () => Subject.Add(N);
 
             It should_be_empty = () => Subject.ShouldBeEmpty();
         }

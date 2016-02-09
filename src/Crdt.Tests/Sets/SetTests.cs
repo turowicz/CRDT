@@ -23,7 +23,7 @@ namespace Crdt.Tests.Sets
         {
             Because of = () => Subject.Add(N);
 
-            It should_contain_only_n = () => Subject.Single().ShouldEqual(N);
+            It should_contain_only_N = () => Subject.Single().ShouldEqual(N);
         }
 
         public class When_adding_N_items : BaseSetTest

@@ -67,7 +67,9 @@ namespace Crdt.Core.Sets
 
         public IEnumerator<T> GetEnumerator()
         {
-            return AddSet.Where(element => !RemoveSet.Contains(element)).GetEnumerator();
+            return AddSet.Where(element => !RemoveSet.Contains(element)
+                                        || RemoveSet.Count(x => x.CompareTo(element) == 0) < AddSet.Count(x => x.CompareTo(element) == 0))
+                         .GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
